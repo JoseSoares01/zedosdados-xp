@@ -19,6 +19,9 @@ let lastY = 0;
 
 // Inicializa quando o DOM estiver carregado
 window.addEventListener('DOMContentLoaded', () => {
+  // Login mobile + bloqueio de acesso
+  initMobileLogin();
+
   // Inicia o relógio
   updateClock();
   setInterval(updateClock, 1000);
@@ -114,6 +117,17 @@ function focusWindow(id) {
 function closeWindow(id) {
   const win = document.getElementById(id);
   if (!win) return;
+
+  if (win.classList.contains('maximized')) {
+    win.classList.remove('maximized');
+    win.style.width = win.dataset.prevWidth || win.style.width;
+    win.style.height = win.dataset.prevHeight || 'auto';
+    win.style.left = win.dataset.prevLeft || win.style.left;
+    win.style.top = win.dataset.prevTop || win.style.top;
+    const maxBtnIcon = win.querySelector('.maximize-btn .xp-window-control-icon');
+    if (maxBtnIcon) maxBtnIcon.src = 'icons/Windows XP Icons/Maximize.png';
+  }
+
   win.style.display = 'none';
   updateTaskbarHandles();
 }
@@ -130,26 +144,32 @@ function minimizeWindow(id) {
 function maximizeWindow(id) {
   const win = document.getElementById(id);
   if (!win) return;
-  
-  if (win.style.width === '100vw' && win.style.height === 'calc(100vh - 40px)') {
-    // Restaura o tamanho original
+
+  const maxBtnIcon = win.querySelector('.maximize-btn .xp-window-control-icon');
+  const isMaximized = win.classList.contains('maximized');
+
+  if (isMaximized) {
+    win.classList.remove('maximized');
     win.style.width = win.dataset.prevWidth || '500px';
     win.style.height = win.dataset.prevHeight || 'auto';
     win.style.left = win.dataset.prevLeft || '100px';
     win.style.top = win.dataset.prevTop || '100px';
+    if (maxBtnIcon) maxBtnIcon.src = 'icons/Windows XP Icons/Maximize.png';
   } else {
-    // Salva as dimensões anteriores
     win.dataset.prevWidth = win.style.width;
     win.dataset.prevHeight = win.style.height;
     win.dataset.prevLeft = win.style.left;
     win.dataset.prevTop = win.style.top;
-    
-    // Maximiza
+
+    win.classList.add('maximized');
     win.style.width = '100vw';
     win.style.height = 'calc(100vh - 40px)';
     win.style.left = '0px';
     win.style.top = '0px';
+    if (maxBtnIcon) maxBtnIcon.src = 'icons/Windows XP Icons/Restore.png';
   }
+
+  focusWindow(id);
 }
 
 // Manipuladores para arrastar janelas
@@ -158,7 +178,7 @@ function dragStart(e, id) {
   focusWindow(id);
   
   const win = document.getElementById(id);
-  if (!win || win.style.width === '100vw') return; // Não arrasta janelas maximizadas
+  if (!win || win.classList.contains('maximized')) return; // Não arrasta janelas maximizadas
 
   // Impede o início do arrasto ao clicar nos botões de controle da janela
   if (e.target.classList.contains('xp-window-control-btn')) return;
@@ -303,6 +323,8 @@ function updateTaskbarHandles() {
   
   // Mapeia os IDs das janelas para seus nomes na barra de tarefas
   const winNames = {
+    'window-about': 'Sobre Mim',
+    'window-ie': 'Meus Projetos',
     'window-overview': 'Visão Geral',
     'window-colors': 'Cores',
     'window-typography': 'Tipografia',
@@ -316,13 +338,15 @@ function updateTaskbarHandles() {
 
   // Mapeia os IDs das janelas para seus respectivos ícones na barra de tarefas
   const winIcons = {
+    'window-about': 'icons/Windows XP Icons/HTML.png',
+    'window-ie': 'icons/Windows XP Icons/Internet Explorer 6.png',
     'window-overview': 'icons/Windows XP Icons/My Computer.png',
     'window-colors': 'icons/Windows XP Icons/Color Profile.png',
     'window-typography': 'icons/Windows XP Icons/Fonts.png',
     'window-paint': 'icons/Windows XP Icons/Paint.png',
     'window-components': 'icons/Windows XP Icons/Control Panel.png',
     'window-layout': 'icons/Windows XP Icons/Tweak UI.png',
-    'window-depth': 'icons/Windows XP Icons/Appearance.png',
+    'window-depth': 'janyel/curriculo-pdf.png',
     'window-dos': 'icons/Windows XP Icons/Checklist.png',
     'window-responsive': 'icons/Windows XP Icons/Display Properties.png'
   };
@@ -372,35 +396,35 @@ function copyColor(hex) {
   });
 }
 
-// Mostra um balão de notificação clássico do XP no canto inferior direito
+// Mostra um balão de notificação clássico do XP a partir do ícone da bandeja
 function showNotification(msg) {
-  // Verifica se a notificação já existe, remove-a
-  const oldNotif = document.getElementById('xp-balloon');
-  if (oldNotif) oldNotif.remove();
-  
+  closeWelcomeBalloon(false);
+
+  const desktop = document.getElementById('desktop');
+  if (!desktop) return;
+
   const balloon = document.createElement('div');
   balloon.id = 'xp-balloon';
   balloon.className = 'xp-balloon';
-  
   balloon.innerHTML = `
     <div class="xp-balloon-header">
-      <span>Área de Transferência do Sistema</span>
-      <span class="xp-balloon-close" onclick="document.getElementById('xp-balloon').remove()">X</span>
+      <div class="xp-balloon-header-title">
+        <img class="xp-balloon-header-icon" src="icons/Windows XP Icons/Information.png" alt="">
+        <span>Área de Transferência</span>
+      </div>
+      <button class="xp-balloon-close" type="button" onclick="closeWelcomeBalloon()" aria-label="Fechar">×</button>
     </div>
     <div class="xp-balloon-content">
-      <img class="xp-balloon-icon" src="icons/Windows XP Icons/Information.png" alt="Info">
-      <div>${msg}</div>
+      <img class="xp-balloon-icon" src="icons/Windows XP Icons/Information.png" alt="">
+      <div class="xp-balloon-body">${msg}</div>
     </div>
   `;
-  
-  document.getElementById('desktop').appendChild(balloon);
-  
-  // Remove automaticamente após 5 segundos
-  setTimeout(() => {
-    if (balloon.parentNode) {
-      balloon.remove();
-    }
-  }, 5000);
+
+  desktop.appendChild(balloon);
+  positionWelcomeBalloon();
+  requestAnimationFrame(() => balloon.classList.add('visible'));
+
+  setTimeout(() => closeWelcomeBalloon(), 5000);
 }
 
 // Alternar abas dentro da janela de demonstração de componentes
@@ -575,4 +599,276 @@ function clearCanvas() {
   if (!paintCtx || !paintCanvas) return;
   paintCtx.fillStyle = '#FFFFFF';
   paintCtx.fillRect(0, 0, paintCanvas.width, paintCanvas.height);
+}
+
+// Internet Explorer — portfólio
+function filterPortfolio(category, btn) {
+  document.querySelectorAll('.portfolio-nav-item').forEach(item => {
+    item.classList.remove('active');
+  });
+  if (btn) btn.classList.add('active');
+
+  document.querySelectorAll('.portfolio-card').forEach(card => {
+    const cats = (card.dataset.category || '').split(' ');
+    const show = category === 'all' || cats.includes(category);
+    card.classList.toggle('hidden', !show);
+  });
+
+  const status = document.getElementById('ie-statusbar');
+  if (status) {
+    status.textContent = category === 'all'
+      ? 'Selecione um projeto para ver detalhes'
+      : `Filtrando: ${btn ? btn.textContent.trim() : category}`;
+  }
+}
+
+function selectPortfolioProject(card, name) {
+  document.querySelectorAll('.portfolio-card').forEach(c => c.classList.remove('selected'));
+  card.classList.add('selected');
+  const status = document.getElementById('ie-statusbar');
+  if (status) status.textContent = `Projeto selecionado: ${name}`;
+}
+
+function togglePortfolioTheme() {
+  const site = document.getElementById('portfolio-site');
+  if (site) site.classList.toggle('portfolio-light');
+}
+
+function ieNavigateHome(e) {
+  if (e) e.preventDefault();
+  filterPortfolio('all', document.querySelector('.portfolio-nav-item[data-filter="all"]'));
+  document.querySelectorAll('.portfolio-card').forEach(c => c.classList.remove('selected'));
+  const status = document.getElementById('ie-statusbar');
+  if (status) status.textContent = 'Selecione um projeto para ver detalhes';
+}
+
+// Mobile — login, boas-vindas e acesso bloqueado
+const MOBILE_BREAKPOINT = 639;
+
+function isMobile() {
+  return window.innerWidth <= MOBILE_BREAKPOINT;
+}
+
+function initMobileLogin() {
+  const loginBtn = document.getElementById('xp-login-user-btn');
+  if (loginBtn) loginBtn.addEventListener('click', startLogin);
+
+  const loggedIn = sessionStorage.getItem('xp-logged-in') === 'true';
+  const requireLogin = sessionStorage.getItem('xp-require-login') === 'true';
+
+  if (loggedIn) {
+    document.body.classList.add('xp-logged-in');
+  } else if (isMobile() || requireLogin) {
+    document.body.classList.remove('xp-logged-in');
+  } else {
+    document.body.classList.add('xp-logged-in');
+    sessionStorage.setItem('xp-logged-in', 'true');
+  }
+
+  document.querySelectorAll('.xp-desktop-icon[data-window]').forEach(icon => {
+    icon.addEventListener('click', (e) => {
+      if (!isMobile()) return;
+      const windowId = icon.dataset.window;
+      if (windowId) {
+        selectIcon(icon, e);
+        openWindow(windowId);
+      }
+    });
+  });
+
+  window.addEventListener('resize', () => {
+    if (!isMobile() && sessionStorage.getItem('xp-require-login') !== 'true') {
+      if (sessionStorage.getItem('xp-logged-in') === 'true') {
+        document.body.classList.add('xp-logged-in');
+      }
+    }
+  });
+}
+
+function startLogin() {
+  const login = document.getElementById('xp-login-screen');
+  const welcome = document.getElementById('xp-welcome-screen');
+
+  if (login) login.style.display = 'none';
+
+  if (!welcome) {
+    completeLogin();
+    return;
+  }
+
+  welcome.classList.add('active');
+  welcome.setAttribute('aria-hidden', 'false');
+
+  setTimeout(() => {
+    welcome.classList.add('fade-out');
+    setTimeout(() => {
+      welcome.classList.remove('active', 'fade-out');
+      welcome.setAttribute('aria-hidden', 'true');
+      completeLogin();
+    }, 450);
+  }, 1800);
+}
+
+function completeLogin() {
+  document.body.classList.add('xp-logged-in');
+  sessionStorage.setItem('xp-logged-in', 'true');
+  sessionStorage.removeItem('xp-require-login');
+  setTimeout(showWelcomeBalloon, 350);
+}
+
+function closeStartMenu() {
+  const startMenu = document.getElementById('start-menu');
+  const startBtn = document.querySelector('.xp-start-btn');
+  if (startMenu) startMenu.style.display = 'none';
+  if (startBtn) startBtn.classList.remove('active');
+}
+
+function showShutdownDialog() {
+  closeStartMenu();
+  document.body.classList.add('xp-power-active');
+  document.getElementById('xp-power-overlay')?.classList.add('visible');
+  document.getElementById('xp-shutdown-dialog')?.classList.add('visible');
+  document.getElementById('xp-logoff-dialog')?.classList.remove('visible');
+}
+
+function showLogoffDialog() {
+  closeStartMenu();
+  document.body.classList.add('xp-power-active');
+  document.getElementById('xp-power-overlay')?.classList.add('visible');
+  document.getElementById('xp-logoff-dialog')?.classList.add('visible');
+  document.getElementById('xp-shutdown-dialog')?.classList.remove('visible');
+}
+
+function closePowerDialog(immediate = false) {
+  document.getElementById('xp-shutdown-dialog')?.classList.remove('visible');
+  document.getElementById('xp-logoff-dialog')?.classList.remove('visible');
+
+  const removeDim = () => {
+    document.body.classList.remove('xp-power-active');
+    document.getElementById('xp-power-overlay')?.classList.remove('visible');
+  };
+
+  if (immediate) {
+    removeDim();
+  } else {
+    setTimeout(removeDim, 450);
+  }
+}
+
+function performLogoff() {
+  closePowerDialog(true);
+  closeWelcomeBalloon(false);
+  closeStartMenu();
+
+  sessionStorage.removeItem('xp-logged-in');
+  sessionStorage.setItem('xp-require-login', 'true');
+  document.body.classList.remove('xp-logged-in');
+
+  const login = document.getElementById('xp-login-screen');
+  if (login) login.style.display = '';
+
+  document.querySelectorAll('.xp-window').forEach(w => {
+    w.style.display = 'none';
+    if (w.classList.contains('maximized')) {
+      w.classList.remove('maximized');
+      const maxBtnIcon = w.querySelector('.maximize-btn .xp-window-control-icon');
+      if (maxBtnIcon) maxBtnIcon.src = 'icons/Windows XP Icons/Maximize.png';
+    }
+  });
+  updateTaskbarHandles();
+}
+
+function positionWelcomeBalloon() {
+  const balloon = document.getElementById('xp-balloon');
+  const trayBtn = document.getElementById('xp-tray-info-btn');
+  const desktop = document.getElementById('desktop');
+  if (!balloon || !trayBtn || !desktop) return;
+
+  const dRect = desktop.getBoundingClientRect();
+  const tRect = trayBtn.getBoundingClientRect();
+  const tailOffset = 28;
+
+  balloon.style.bottom = `${dRect.bottom - tRect.top + 4}px`;
+  balloon.style.left = 'auto';
+
+  const iconCenterFromRight = dRect.right - (tRect.left + tRect.width / 2);
+  balloon.style.right = `${Math.max(8, iconCenterFromRight - tailOffset)}px`;
+  balloon.style.setProperty('--balloon-tail-right', `${tailOffset}px`);
+
+  requestAnimationFrame(() => {
+    const bRect = balloon.getBoundingClientRect();
+    const iconCenterX = tRect.left + tRect.width / 2;
+    const tailX = bRect.right - tailOffset;
+    const diff = iconCenterX - tailX;
+    if (Math.abs(diff) > 2) {
+      const currentRight = parseFloat(balloon.style.right) || 8;
+      balloon.style.right = `${Math.max(8, currentRight - diff)}px`;
+    }
+  });
+}
+
+function closeWelcomeBalloon(animate = true) {
+  const balloon = document.getElementById('xp-balloon');
+  const trayBtn = document.getElementById('xp-tray-info-btn');
+  if (trayBtn) trayBtn.classList.remove('active');
+  if (!balloon) return;
+
+  window.removeEventListener('resize', positionWelcomeBalloon);
+
+  if (animate) {
+    balloon.classList.remove('visible');
+    setTimeout(() => balloon.remove(), 220);
+  } else {
+    balloon.remove();
+  }
+}
+
+function toggleWelcomeBalloon() {
+  const existing = document.getElementById('xp-balloon');
+  if (existing && existing.classList.contains('visible')) {
+    closeWelcomeBalloon();
+    return;
+  }
+  showWelcomeBalloon();
+}
+
+function showWelcomeBalloon() {
+  closeWelcomeBalloon(false);
+
+  const desktop = document.getElementById('desktop');
+  const trayBtn = document.getElementById('xp-tray-info-btn');
+  if (!desktop) return;
+
+  const balloon = document.createElement('div');
+  balloon.id = 'xp-balloon';
+  balloon.className = 'xp-balloon';
+  balloon.innerHTML = `
+    <div class="xp-balloon-header">
+      <div class="xp-balloon-header-title">
+        <img class="xp-balloon-header-icon" src="icons/Windows XP Icons/Information.png" alt="">
+        <span>Bem-vindo ao MitchIvin XP</span>
+      </div>
+      <button class="xp-balloon-close" type="button" onclick="closeWelcomeBalloon()" aria-label="Fechar">×</button>
+    </div>
+    <div class="xp-balloon-content">
+      <img class="xp-balloon-icon" src="icons/Windows XP Icons/Information.png" alt="">
+      <div class="xp-balloon-body">
+        Uma interface fiel ao XP, criada para mostrar o meu trabalho e atenção ao detalhe.
+        <div class="xp-balloon-links">
+          Começar:
+          <a href="#" onclick="openWindow('window-about'); return false;">Sobre Mim</a> |
+          <a href="#" onclick="openWindow('window-ie'); return false;">Meus Projetos</a>
+        </div>
+      </div>
+    </div>
+  `;
+  desktop.appendChild(balloon);
+
+  positionWelcomeBalloon();
+  window.addEventListener('resize', positionWelcomeBalloon);
+
+  requestAnimationFrame(() => {
+    balloon.classList.add('visible');
+    if (trayBtn) trayBtn.classList.add('active');
+  });
 }
