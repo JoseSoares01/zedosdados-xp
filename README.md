@@ -35,6 +35,28 @@ O design adere estritamente a um conjunto de regras visuais e semânticas basead
 
 ---
 
+## 📁 Estrutura do Projeto
+
+```
+mitchivin-xp/
+├── index.html          # Página principal
+├── LICENSE
+├── README.md
+├── .gitignore
+└── assets/
+    ├── css/            # Estilos
+    ├── js/             # Scripts da aplicação
+    ├── icons/          # Ícones Windows XP
+    ├── images/
+    │   ├── ui/         # Wallpaper, sprites da interface
+    │   ├── janyel/     # Fotos e assets pessoais
+    │   └── portfolio/  # Previews dos projetos
+    └── media/
+        └── videos/     # Vídeos (Media Player)
+```
+
+---
+
 ## 🛠️ Como Executar o Projeto Localmente
 
 Como o projeto foi desenvolvido usando tecnologias web puras e sem dependências complexas de compilação, a execução é extremamente simples:
