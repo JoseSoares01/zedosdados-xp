@@ -10,6 +10,7 @@
   <link rel="icon" type="image/png" href="assets/images/ui/favicon.png?v=2">
   <link rel="apple-touch-icon" href="assets/images/ui/favicon.png?v=2">
   <link rel="stylesheet" href="assets/css/styles.css">
+  <link rel="stylesheet" href="assets/css/warcraft.css">
 </head>
 
 <body>
@@ -944,6 +945,38 @@
     </div>
 
 
+    <!-- ==================== WINDOW: WORLD OF WARCRAFT ==================== -->
+    <div class="xp-window xp-warcraft-window" id="window-warcraft" style="left: 60px; top: 30px; width: 920px; display: none;">
+      <div class="xp-window-titlebar" onmousedown="dragStart(event, 'window-warcraft')">
+        <div class="xp-window-title">
+          <img class="xp-window-title-icon" src="assets/icons/Windows XP Icons/World of Warcraft.png" alt="">
+          World of Warcraft
+        </div>
+        <div class="xp-window-controls">
+          <button class="xp-window-control-btn" onclick="minimizeWindow('window-warcraft')"><img src="assets/icons/Windows XP Icons/Minimize.png" alt="" class="xp-window-control-icon"></button>
+          <button class="xp-window-control-btn maximize-btn" onclick="maximizeWindow('window-warcraft')"><img src="assets/icons/Windows XP Icons/Maximize.png" alt="" class="xp-window-control-icon"></button>
+          <button class="xp-window-control-btn close" onclick="closeWindow('window-warcraft')"><img src="assets/icons/Windows XP Icons/Exit.png" alt="" class="xp-window-control-icon"></button>
+        </div>
+      </div>
+      <div class="xp-window-content xp-warcraft-content">
+        <div class="wc-main" id="wc-main">
+          <img class="wc-logo" src="assets/warcraft-menu-master/img/logo-wc.PNG" alt="World of Warcraft">
+          <div class="wc-menu-stack" id="wc-menu-stack">
+            <img class="wc-menu" id="wc-menu" src="assets/warcraft-menu-master/img/menu-wc.PNG" alt="">
+            <div class="wc-menu-actions">
+              <button type="button" class="wc-item" data-slot="1" data-action="single"><span>S</span>ingle Player</button>
+              <button type="button" class="wc-item" data-slot="2" data-action="battle-net"><span>B</span>attle.net</button>
+              <button type="button" class="wc-item" data-slot="3" data-action="lan"><span>L</span>ocal Area Network</button>
+              <button type="button" class="wc-item" data-slot="4" data-action="options"><span>O</span>ptions</button>
+              <button type="button" class="wc-item" data-slot="5" data-action="credits"><span>C</span>redits</button>
+              <button type="button" class="wc-item" data-slot="6" data-action="quit"><span>Q</span>uit</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
     <!-- ==================== WINDOW 8: DO'S & DON'TS ==================== -->
     <div class="xp-window" id="window-dos" style="left: 300px; top: 280px; width: 680px; display: none;">
       <div class="xp-window-titlebar" onmousedown="dragStart(event, 'window-dos')">
@@ -1115,6 +1148,12 @@
               <div class="xp-start-menu-item-title">Media Player</div>
             </div>
           </div>
+          <div class="xp-start-menu-item" onclick="openWindow('window-warcraft')">
+            <img class="xp-start-menu-item-icon" src="assets/icons/Windows XP Icons/World of Warcraft.png" alt="">
+            <div>
+              <div class="xp-start-menu-item-title">World of Warcraft</div>
+            </div>
+          </div>
           <div class="xp-start-menu-all-programs-divider"></div>
           <div class="xp-start-menu-all-programs" id="all-programs-btn">
             <span class="xp-start-menu-all-programs-text">Todos os Programas</span>
@@ -1161,7 +1200,7 @@
             <img class="xp-start-menu-right-icon" src="assets/icons/Windows XP Icons/DoodleDev.png" alt="">
             DoodleDev
           </div>
-          <div class="xp-start-menu-right-item" onclick="openWindow('window-dos')">
+          <div class="xp-start-menu-right-item" onclick="openWindow('window-warcraft')">
             <img class="xp-start-menu-right-icon" src="assets/icons/Windows XP Icons/World of Warcraft.png" alt="">
             World of Warcraft
           </div>
@@ -1237,7 +1276,7 @@
             <img class="xp-programs-icon" src="assets/icons/Windows XP Icons/Paint.png" alt="">
             Paint
           </div>
-          <div class="xp-programs-item" onclick="openWindow('window-dos')">
+          <div class="xp-programs-item" onclick="openWindow('window-warcraft')">
             <img class="xp-programs-icon" src="assets/icons/Windows XP Icons/World of Warcraft.png" alt="">
             World of Warcraft
           </div>
@@ -1326,6 +1365,7 @@
   <script src="assets/js/projects.js"></script>
   <script src="assets/js/paint-ui.js"></script>
   <script src="assets/js/cmd-terminal.js"></script>
+  <script src="assets/js/warcraft.js"></script>
   <script src="assets/js/app.js"></script>
 </body>
 

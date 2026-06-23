@@ -3950,6 +3950,18 @@ body.xp-power-active #desktop {
     left: 4px;
     bottom: 44px;
     overflow: hidden;
+    max-height: calc(100dvh - 52px);
+  }
+
+  .xp-start-menu-columns {
+    min-height: 0;
+  }
+
+  .xp-start-menu-left,
+  .xp-start-menu-right,
+  .xp-start-menu-programs-panel {
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
   }
 
   .xp-start-menu.recent-open {

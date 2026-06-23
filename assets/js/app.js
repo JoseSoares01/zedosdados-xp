@@ -48,6 +48,8 @@ window.addEventListener('DOMContentLoaded', () => {
   // Inicializa os comportamentos de passar o mouse/clicar no Menu Iniciar
   initStartMenuInteraction();
 
+  initStartMenuMobileTaps();
+
   // Renderiza os cards do portfólio a partir da configuração
   renderPortfolio();
 
@@ -120,6 +122,7 @@ function openWindow(id) {
 
   if (id === 'window-wmp') wmpOpenDefault();
   if (id === 'window-layout' && typeof startCmdTerminal === 'function') startCmdTerminal();
+  if (id === 'window-warcraft' && typeof initWarcraftMenu === 'function') initWarcraftMenu();
 }
 
 // Gerenciamento de janelas: Foco (trazer para a frente)
@@ -269,6 +272,7 @@ function resetWindowPositions() {
     { id: 'window-layout', left: '220px', top: '200px', width: '640px' },
     { id: 'window-depth', left: '260px', top: '240px', width: '720px' },
     { id: 'window-wmp', left: '120px', top: '80px', width: '420px' },
+    { id: 'window-warcraft', left: '60px', top: '30px', width: '920px' },
     { id: 'window-dos', left: '300px', top: '280px', width: '680px' },
     { id: 'window-responsive', left: '340px', top: '320px', width: '660px' }
   ];
@@ -436,6 +440,41 @@ function initStartMenuInteraction() {
   });
 }
 
+let startMenuTouchUntil = 0;
+
+function initStartMenuMobileTaps() {
+  const startMenu = document.getElementById('start-menu');
+  if (!startMenu) return;
+
+  startMenu.addEventListener('touchend', (e) => {
+    if (!isMobile()) return;
+
+    const item = e.target.closest('.xp-start-menu-item, .xp-start-menu-right-item, .xp-programs-item');
+    if (!item) return;
+
+    const onclick = item.getAttribute('onclick') || '';
+    const match = onclick.match(/openWindow\('([^']+)'\)/);
+    if (!match) return;
+
+    e.preventDefault();
+    startMenuTouchUntil = Date.now() + 500;
+    openWindow(match[1]);
+  }, { passive: false });
+
+  startMenu.addEventListener('click', (e) => {
+    if (!isMobile() || Date.now() > startMenuTouchUntil) return;
+
+    const item = e.target.closest('.xp-start-menu-item, .xp-start-menu-right-item, .xp-programs-item');
+    if (!item) return;
+
+    const onclick = item.getAttribute('onclick') || '';
+    if (onclick.includes('openWindow(')) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
+  }, true);
+}
+
 // Atualiza os manipuladores na barra de tarefas para representar janelas visíveis
 function updateTaskbarHandles() {
   const container = document.getElementById('taskbar-handles');
@@ -455,6 +494,7 @@ function updateTaskbarHandles() {
     'window-layout': 'Prompt de Comando',
     'window-depth': 'Meu Currículo',
     'window-wmp': 'Media Player',
+    'window-warcraft': 'World of Warcraft',
     'window-dos': 'Lixeira',
     'window-responsive': 'Simulador Vídeo'
   };
@@ -471,6 +511,7 @@ function updateTaskbarHandles() {
     'window-layout': 'assets/icons/Windows XP Icons/Command Prompt.png',
     'window-depth': 'assets/images/janyel/curriculo-pdf.png',
     'window-wmp': 'assets/icons/Windows XP Icons/Windows Media Player 10.png',
+    'window-warcraft': 'assets/icons/Windows XP Icons/World of Warcraft.png',
     'window-dos': 'assets/icons/Windows XP Icons/Recycle Bin (empty).png',
     'window-responsive': 'assets/icons/Windows XP Icons/Display Properties.png'
   };
