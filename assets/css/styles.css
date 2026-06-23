@@ -1081,6 +1081,7 @@ body {
 .xp-start-menu-recent-panel {
   position: absolute;
   left: calc(100% - 1px);
+  right: auto;
   margin-left: -2px;
   width: 210px;
   max-height: 380px;
@@ -1101,6 +1102,19 @@ body {
       rgba(0, 0, 0, 0.03) 1px,
       rgba(0, 0, 0, 0.03) 2px
     );
+  animation: xp-recent-flyout-in 0.15s ease-out;
+}
+
+@keyframes xp-recent-flyout-in {
+  from {
+    opacity: 0;
+    transform: translateX(-6px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
 }
 
 .xp-recent-item {
@@ -3935,6 +3949,46 @@ body.xp-power-active #desktop {
     max-width: 100%;
     left: 4px;
     bottom: 44px;
+    overflow: hidden;
+  }
+
+  .xp-start-menu.recent-open {
+    overflow: visible;
+  }
+
+  .xp-start-menu-recent-panel {
+    left: auto;
+    right: calc(100% - 1px);
+    margin-left: 0;
+    margin-right: -2px;
+    animation-name: xp-recent-flyout-in-mobile;
+  }
+
+  .xp-start-menu-right-submenu-arrow {
+    border-left: none;
+    border-right: 4px solid var(--deep-blue);
+  }
+
+  .xp-start-menu-right-item:hover .xp-start-menu-right-submenu-arrow {
+    border-left-color: transparent;
+    border-right-color: var(--white);
+  }
+
+  .xp-start-menu-right-item.active .xp-start-menu-right-submenu-arrow {
+    border-left-color: transparent;
+    border-right-color: var(--white);
+  }
+
+  @keyframes xp-recent-flyout-in-mobile {
+    from {
+      opacity: 0;
+      transform: translateX(6px);
+    }
+
+    to {
+      opacity: 1;
+      transform: translateX(0);
+    }
   }
 
   .xp-balloon {

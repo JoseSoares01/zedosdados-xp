@@ -363,6 +363,7 @@ function initStartMenuInteraction() {
       const triggerRect = recentTrigger.getBoundingClientRect();
       recentPanel.style.top = `${triggerRect.top - columnsRect.top}px`;
     }
+    recentPanel.style.bottom = 'auto';
     recentPanel.style.display = 'flex';
     recentPanel.setAttribute('aria-hidden', 'false');
     recentTrigger.classList.add('active');
@@ -375,6 +376,8 @@ function initStartMenuInteraction() {
     recentPanel.setAttribute('aria-hidden', 'true');
     recentTrigger.classList.remove('active');
     startMenu.classList.remove('recent-open');
+    recentPanel.style.top = '';
+    recentPanel.style.bottom = '';
   }
 
   window.hideRecentPanel = hideRecentPanel;
@@ -388,10 +391,18 @@ function initStartMenuInteraction() {
   });
 
   // Passar o mouse em qualquer item regular da coluna esquerda restaura a visualização padrão
+  const leftColumn = document.querySelector('.xp-start-menu-left');
+
+  function isRecentHoverTarget(el) {
+    if (!el) return false;
+    if (recentPanel?.contains(el) || recentTrigger?.contains(el)) return true;
+    if (isMobile() && leftColumn?.contains(el)) return true;
+    return false;
+  }
+
   leftItems.forEach(item => {
     item.addEventListener('mouseenter', () => {
       hidePrograms();
-      hideRecentPanel();
     });
   });
 
@@ -399,12 +410,19 @@ function initStartMenuInteraction() {
     recentTrigger.addEventListener('mouseenter', showRecentPanel);
 
     recentTrigger.addEventListener('mouseleave', (e) => {
-      if (!recentPanel.contains(e.relatedTarget)) hideRecentPanel();
+      if (!isRecentHoverTarget(e.relatedTarget)) hideRecentPanel();
     });
 
     recentPanel.addEventListener('mouseleave', (e) => {
-      if (!recentTrigger.contains(e.relatedTarget)) hideRecentPanel();
+      if (!isRecentHoverTarget(e.relatedTarget)) hideRecentPanel();
     });
+
+    if (leftColumn) {
+      leftColumn.addEventListener('mouseleave', (e) => {
+        if (!startMenu.classList.contains('recent-open')) return;
+        if (!isRecentHoverTarget(e.relatedTarget)) hideRecentPanel();
+      });
+    }
 
     defaultRight.querySelectorAll('.xp-start-menu-right-item:not(#recent-used-trigger)').forEach(item => {
       item.addEventListener('mouseenter', hideRecentPanel);
