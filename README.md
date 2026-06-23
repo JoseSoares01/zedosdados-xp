@@ -1,6 +1,6 @@
-# MitchIvin XP
+# zedosdados XP
 
-Uma reinterpretação nostálgica do clássico sistema operacional Windows XP combinada com diretrizes de design modernas, limpas e responsivas. Este projeto serve como um showcase interativo e playground de componentes para o **MitchIvin XP Design System**.
+Uma reinterpretação nostálgica do clássico sistema operacional Windows XP combinada com diretrizes de design modernas, limpas e responsivas. Este projeto serve como um showcase interativo e playground de componentes para o **zedosdados XP Design System**.
 
 ---
 
@@ -17,7 +17,7 @@ Uma reinterpretação nostálgica do clássico sistema operacional Windows XP co
 
 ---
 
-## 🎨 Diretrizes do Design System (MitchIvin XP)
+## 🎨 Diretrizes do Design System (zedosdados XP)
 
 O design adere estritamente a um conjunto de regras visuais e semânticas baseadas na grade de espaçamento de `4px` e tipografia do Windows XP:
 
@@ -63,11 +63,11 @@ Como o projeto foi desenvolvido usando tecnologias web puras e sem dependências
 
 1. Clone o repositório em sua máquina:
    ```bash
-   git clone https://github.com/JoseSoares01/mitchivin-xp.git
+   git clone https://github.com/JoseSoares01/zedosdados-xp.git
    ```
 2. Navegue até o diretório do projeto:
    ```bash
-   cd mitchivin-xp
+   cd zedosdados-xp
    ```
 3. Abra o arquivo `index.html` em qualquer navegador de sua preferência:
    - Dê um duplo clique no arquivo `index.html` no seu gerenciador de arquivos.
