@@ -603,6 +603,63 @@ body {
   max-height: 70vh;
 }
 
+/* Prompt de Comando (CMD) */
+.xp-window--cmd .xp-window-content.xp-cmd-content {
+  padding: 8px 10px;
+  background: #000;
+  color: #ccc;
+  max-height: none;
+  overflow: hidden;
+}
+
+.xp-cmd-screen {
+  height: 100%;
+  min-height: 280px;
+  overflow-y: auto;
+  font-family: 'Lucida Console', 'Courier New', monospace;
+  font-size: 14px;
+  line-height: 1.35;
+}
+
+.xp-cmd-output {
+  margin: 0;
+  padding: 0;
+  white-space: pre-wrap;
+  word-break: break-word;
+  color: #ccc;
+  font-family: inherit;
+  font-size: inherit;
+  background: transparent;
+  border: 0;
+}
+
+.xp-cmd-input-line {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  color: #ccc;
+}
+
+.xp-cmd-prompt {
+  color: #ccc;
+  white-space: pre;
+}
+
+.xp-cmd-typed {
+  color: #ccc;
+}
+
+.xp-cmd-cursor {
+  animation: xp-cmd-blink 1s step-end infinite;
+  color: #ccc;
+}
+
+@keyframes xp-cmd-blink {
+  50% {
+    opacity: 0;
+  }
+}
+
 /* Window Menu bar (File, Edit, Help, etc.) */
 .xp-window-menu {
   background: var(--light-gray);
@@ -3538,6 +3595,163 @@ body.xp-power-active #desktop {
   box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.15);
 }
 
+/* Diálogo Abrir Ligação */
+.xp-open-link-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9000;
+  background: rgba(0, 0, 0, 0.2);
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition: opacity 0.2s ease, visibility 0s linear 0.2s;
+}
+
+.xp-open-link-overlay.visible {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: all;
+  transition: opacity 0.2s ease, visibility 0s;
+}
+
+.xp-open-link-dialog {
+  position: fixed;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%) scale(0.98);
+  z-index: 9001;
+  width: 360px;
+  max-width: calc(100vw - 32px);
+  border: 2px solid #08316c;
+  border-radius: 8px 8px 6px 6px;
+  box-shadow: 4px 4px 18px rgba(0, 0, 0, 0.45);
+  overflow: hidden;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  font-family: Tahoma, Verdana, sans-serif;
+  transition: opacity 0.2s ease, transform 0.2s ease, visibility 0s linear 0.2s;
+}
+
+.xp-open-link-dialog.visible {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: all;
+  transform: translate(-50%, -50%) scale(1);
+  transition: opacity 0.2s ease, transform 0.2s ease, visibility 0s;
+}
+
+.xp-open-link-titlebar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 5px 6px 5px 8px;
+  background: linear-gradient(180deg, #0f61cb 0%, #0a4db0 100%);
+  color: #fff;
+  font-size: 12px;
+  font-weight: 700;
+  text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.35);
+}
+
+.xp-open-link-titlebar-left {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.xp-open-link-titlebar-left img {
+  width: 16px;
+  height: 16px;
+}
+
+.xp-open-link-close {
+  width: 21px;
+  height: 21px;
+  padding: 0;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.xp-open-link-close img {
+  width: 18px;
+  height: 18px;
+}
+
+.xp-open-link-body {
+  padding: 28px 24px 20px;
+  text-align: center;
+  background-color: #ece9d8;
+  background-image:
+    repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 1px,
+      rgba(0, 0, 0, 0.03) 1px,
+      rgba(0, 0, 0, 0.03) 2px
+    );
+}
+
+.xp-open-link-big-icon {
+  width: 72px;
+  height: 72px;
+  margin: 0 auto 14px;
+  display: block;
+  object-fit: contain;
+}
+
+.xp-open-link-heading {
+  margin: 0 0 10px;
+  font-size: 14px;
+  font-weight: 700;
+  color: #000;
+}
+
+.xp-open-link-message {
+  margin: 0;
+  font-size: 12px;
+  color: #000;
+  line-height: 1.45;
+}
+
+.xp-open-link-footer {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  padding: 12px 16px 14px;
+  background: #ece9d8;
+  border-top: 1px solid #c0c0c0;
+}
+
+.xp-open-link-btn {
+  min-width: 110px;
+  padding: 5px 14px;
+  font-size: 11px;
+  font-family: Tahoma, sans-serif;
+  border: 1px solid #707070;
+  border-radius: 3px;
+  background: linear-gradient(180deg, #fff 0%, #ece9d8 55%, #d8d4c8 100%);
+  box-shadow: inset 0 1px 0 #fff, 0 1px 2px rgba(0, 0, 0, 0.12);
+  cursor: pointer;
+  color: #000;
+}
+
+.xp-open-link-btn:hover {
+  background: linear-gradient(180deg, #fff 0%, #f5f3eb 55%, #e4e0d4 100%);
+}
+
+.xp-open-link-btn:active {
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.2);
+}
+
+.xp-open-link-btn--primary:focus {
+  outline: 1px dotted #000;
+  outline-offset: -4px;
+}
+
 /* 7. Responsive Styles & Breakpoints */
 
 /* Tablet (640px to 1023px) */
@@ -3671,6 +3885,18 @@ body.xp-power-active #desktop {
     height: calc(100dvh - 40px);
   }
 
+  .xp-window-controls .xp-window-control-btn:not(.close) {
+    display: none !important;
+  }
+
+  body.xp-mobile .xp-window {
+    cursor: default;
+  }
+
+  body.xp-mobile .xp-window-titlebar {
+    cursor: default;
+  }
+
   .xp-window-content {
     max-height: none;
     flex: 1;
@@ -3680,6 +3906,17 @@ body.xp-power-active #desktop {
 
   .xp-ie-window .xp-window-content {
     padding: 0;
+  }
+
+  .xp-window--cmd .xp-cmd-screen {
+    min-height: 0;
+    flex: 1;
+  }
+
+  .xp-window--cmd .xp-window-content.xp-cmd-content {
+    padding: 6px 8px;
+    display: flex;
+    flex-direction: column;
   }
 
   .xp-taskbar {

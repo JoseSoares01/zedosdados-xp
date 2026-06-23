@@ -99,6 +99,29 @@
     <div class="xp-welcome-band xp-welcome-band--bottom"></div>
   </div>
 
+  <!-- Diálogo Abrir Ligação (redes sociais) -->
+  <div id="xp-open-link-overlay" class="xp-open-link-overlay" aria-hidden="true"></div>
+  <div id="xp-open-link-dialog" class="xp-open-link-dialog" role="dialog" aria-labelledby="open-link-heading" aria-hidden="true">
+    <div class="xp-open-link-titlebar">
+      <div class="xp-open-link-titlebar-left">
+        <img id="open-link-title-icon" src="assets/icons/Windows XP Icons/Github.png" alt="">
+        <span>Abrir Ligação</span>
+      </div>
+      <button type="button" class="xp-open-link-close" onclick="closeOpenLinkDialog()" aria-label="Fechar">
+        <img src="assets/icons/Windows XP Icons/Exit.png" alt="">
+      </button>
+    </div>
+    <div class="xp-open-link-body">
+      <img id="open-link-big-icon" class="xp-open-link-big-icon" src="assets/icons/Windows XP Icons/Github.png" alt="">
+      <h2 class="xp-open-link-heading" id="open-link-heading">Abrir Ligação</h2>
+      <p class="xp-open-link-message">Tem a certeza de que deseja abrir "<span id="open-link-name">O meu Github</span>"?</p>
+    </div>
+    <div class="xp-open-link-footer">
+      <button type="button" class="xp-open-link-btn" onclick="closeOpenLinkDialog()">Cancelar</button>
+      <button type="button" class="xp-open-link-btn xp-open-link-btn--primary" id="open-link-visit-btn" onclick="visitPendingSocialLink()">Visitar O meu Github</button>
+    </div>
+  </div>
+
   <!-- The Retro-Modern Desktop Canvas -->
   <div class="xp-desktop" id="desktop">
 
@@ -126,6 +149,12 @@
       <div class="xp-desktop-icon xp-desktop-icon--mobile" data-window="window-colors" onclick="selectIcon(this, event)" ondblclick="openWindow('window-colors')">
         <img class="xp-desktop-icon-img" src="assets/icons/Windows XP Icons/Email.png" alt="Contato">
         <span class="xp-desktop-icon-text">Contato</span>
+      </div>
+
+      <!-- Icon: Prompt de Comando (mobile) -->
+      <div class="xp-desktop-icon xp-desktop-icon--mobile" data-window="window-layout" onclick="selectIcon(this, event)" ondblclick="openWindow('window-layout')">
+        <img class="xp-desktop-icon-img" src="assets/icons/Windows XP Icons/Command Prompt.png" alt="Prompt de Comando">
+        <span class="xp-desktop-icon-text">Prompt de Comando</span>
       </div>
 
       <!-- Icon 1: Meu Computador (Visão Geral do Tema) -->
@@ -200,11 +229,14 @@
             <div class="xp-ie-panel">
               <div class="xp-ie-panel-header">Links Sociais <span class="xp-ie-panel-chevron">▼</span></div>
               <div class="xp-ie-panel-body">
-                <a class="xp-ie-panel-item" href="https://www.linkedin.com/in/janyel-rodrigues-1b998a190/" target="_blank" rel="noopener">
+                <a class="xp-ie-panel-item" href="#" data-social="linkedin">
                   <img src="assets/icons/Windows XP Icons/LinkedIn.png" alt=""> LinkedIn
                 </a>
-                <a class="xp-ie-panel-item" href="https://github.com/JoseSoares01" target="_blank" rel="noopener">
+                <a class="xp-ie-panel-item" href="#" data-social="github">
                   <img src="assets/icons/Windows XP Icons/Github.png" alt=""> Github
+                </a>
+                <a class="xp-ie-panel-item" href="#" data-social="instagram">
+                  <img src="assets/icons/Windows XP Icons/Instagram.png" alt=""> Instagram
                 </a>
                 <a class="xp-ie-panel-item" href="https://site-portifolio-eoh.pages.dev/" target="_blank" rel="noopener">
                   <img src="assets/icons/Windows XP Icons/Internet Explorer 6.png" alt=""> Site Portfólio
@@ -317,8 +349,9 @@
                 <input type="text" placeholder="Buscar projetos..." aria-label="Buscar projetos">
               </div>
               <div class="portfolio-social">
-                <a href="https://www.linkedin.com/in/janyel-rodrigues-1b998a190/" target="_blank" rel="noopener" title="LinkedIn"><img src="assets/icons/Windows XP Icons/LinkedIn.png" alt=""></a>
-                <a href="https://github.com/JoseSoares01" target="_blank" rel="noopener" title="Github"><img src="assets/icons/Windows XP Icons/Github.png" alt=""></a>
+                <a href="#" data-social="linkedin" title="LinkedIn"><img src="assets/icons/Windows XP Icons/LinkedIn.png" alt=""></a>
+                <a href="#" data-social="github" title="Github"><img src="assets/icons/Windows XP Icons/Github.png" alt=""></a>
+                <a href="#" data-social="instagram" title="Instagram"><img src="assets/icons/Windows XP Icons/Instagram.png" alt=""></a>
                 <a href="https://site-portifolio-eoh.pages.dev/" target="_blank" rel="noopener" title="Site Portfólio"><img src="assets/icons/Windows XP Icons/Internet Explorer 6.png" alt=""></a>
               </div>
             </header>
@@ -427,7 +460,7 @@
             <img src="assets/icons/Windows XP Icons/Paste.png" alt="">
           </button>
           <span class="xp-mail-toolbar-sep" aria-hidden="true"></span>
-          <a class="xp-mail-toolbar-btn" href="https://www.linkedin.com/in/janyel-rodrigues-1b998a190/" target="_blank" rel="noopener" title="LinkedIn">
+          <a class="xp-mail-toolbar-btn" href="#" data-social="linkedin" title="LinkedIn">
             <img src="assets/icons/Windows XP Icons/LinkedIn.png" alt="">
             <span>LinkedIn</span>
           </a>
@@ -729,11 +762,11 @@
     </div>
 
 
-    <div class="xp-window" id="window-layout" style="left: 220px; top: 200px; width: 640px; display: none;">
+    <div class="xp-window xp-window--cmd" id="window-layout" style="left: 220px; top: 200px; width: 640px; display: none;">
       <div class="xp-window-titlebar" onmousedown="dragStart(event, 'window-layout')">
         <div class="xp-window-title">
-          <img class="xp-window-title-icon" src="assets/icons/Windows XP Icons/Tweak UI.png" alt="">
-          Guia de Grade & Espaçamento
+          <img class="xp-window-title-icon" src="assets/icons/Windows XP Icons/Command Prompt.png" alt="">
+          Prompt de Comando
         </div>
         <div class="xp-window-controls">
           <button class="xp-window-control-btn" onclick="minimizeWindow('window-layout')"><img src="assets/icons/Windows XP Icons/Minimize.png" alt="" class="xp-window-control-icon"></button>
@@ -741,63 +774,12 @@
           <button class="xp-window-control-btn close" onclick="closeWindow('window-layout')"><img src="assets/icons/Windows XP Icons/Exit.png" alt="" class="xp-window-control-icon"></button>
         </div>
       </div>
-      <div class="xp-window-content">
-        <h3 class="font-ui-label-bold" style="margin-bottom: var(--spacing-sm);">Espaçamento Base de Grade 4px</h3>
-        <p class="font-body" style="margin-bottom: var(--spacing-md);">
-          Todo o espaçamento, preenchimento (padding) e margens são estritamente mapeados para a escala base de 4px. Sem
-          valores intermediários.
-        </p>
-
-        <div class="spacing-row">
-          <div class="spacing-label">xs (4px)</div>
-          <div class="spacing-bar" style="width: 4px;"></div>
-        </div>
-        <div class="spacing-row">
-          <div class="spacing-label">sm (8px)</div>
-          <div class="spacing-bar" style="width: 8px;"></div>
-        </div>
-        <div class="spacing-row">
-          <div class="spacing-label">md (12px)</div>
-          <div class="spacing-bar" style="width: 12px;"></div>
-        </div>
-        <div class="spacing-row">
-          <div class="spacing-label">lg (20px)</div>
-          <div class="spacing-bar" style="width: 20px;"></div>
-        </div>
-        <div class="spacing-row">
-          <div class="spacing-label">xl (24px)</div>
-          <div class="spacing-bar" style="width: 24px;"></div>
-        </div>
-        <div class="spacing-row">
-          <div class="spacing-label">xxl (28px)</div>
-          <div class="spacing-bar" style="width: 28px;"></div>
-        </div>
-
-        <h3 class="font-ui-label-bold" style="margin-top: var(--spacing-lg); margin-bottom: var(--spacing-sm);">
-          Grade de Desktop de 12 Colunas (Espaço/Gutter: 20px)</h3>
-        <div style="background: var(--light-gray); padding: var(--spacing-md); border-radius: var(--radius-sm);">
-          <div class="grid-12"
-            style="text-align: center; color: var(--bright-blue); font-size: 11px; font-weight: bold;">
-            <div class="col-4"
-              style="background: var(--light-blue-surface); border: 1px solid var(--sky-blue); padding: var(--spacing-xs);">
-              col-4</div>
-            <div class="col-4"
-              style="background: var(--light-blue-surface); border: 1px solid var(--sky-blue); padding: var(--spacing-xs);">
-              col-4</div>
-            <div class="col-4"
-              style="background: var(--light-blue-surface); border: 1px solid var(--sky-blue); padding: var(--spacing-xs);">
-              col-4</div>
-
-            <div class="col-8"
-              style="background: var(--light-blue-surface); border: 1px solid var(--sky-blue); padding: var(--spacing-xs);">
-              col-8</div>
-            <div class="col-4"
-              style="background: var(--light-blue-surface); border: 1px solid var(--sky-blue); padding: var(--spacing-xs);">
-              col-4</div>
-
-            <div class="col-12"
-              style="background: var(--light-blue-surface); border: 1px solid var(--sky-blue); padding: var(--spacing-xs);">
-              col-12 (Largura Completa)</div>
+      <div class="xp-window-content xp-cmd-content">
+        <div class="xp-cmd-screen" id="xp-cmd-screen">
+          <pre class="xp-cmd-output" id="xp-cmd-output" aria-live="polite"></pre>
+          <div class="xp-cmd-input-line">
+            <span class="xp-cmd-prompt" id="xp-cmd-prompt-label"></span>
+            <span class="xp-cmd-typed" id="xp-cmd-typed"></span><span class="xp-cmd-cursor" aria-hidden="true">_</span>
           </div>
         </div>
       </div>
@@ -1140,13 +1122,17 @@
 
         <!-- Default Right Column -->
         <div class="xp-start-menu-right" id="start-menu-right-default">
-          <div class="xp-start-menu-right-item" onclick="window.open('https://www.linkedin.com/in/janyel-rodrigues-1b998a190/', '_blank')">
+          <div class="xp-start-menu-right-item" data-social="linkedin">
             <img class="xp-start-menu-right-icon" src="assets/icons/Windows XP Icons/LinkedIn.png" alt="">
             LinkedIn
           </div>
-          <div class="xp-start-menu-right-item" onclick="window.open('https://github.com/JoseSoares01', '_blank')">
+          <div class="xp-start-menu-right-item" data-social="github">
             <img class="xp-start-menu-right-icon" src="assets/icons/Windows XP Icons/Github.png" alt="">
             Github
+          </div>
+          <div class="xp-start-menu-right-item" data-social="instagram">
+            <img class="xp-start-menu-right-icon" src="assets/icons/Windows XP Icons/Instagram.png" alt="">
+            Instagram
           </div>
           <div class="xp-start-menu-right-item" onclick="window.open('https://site-portifolio-eoh.pages.dev/', '_blank')">
             <img class="xp-start-menu-right-icon" src="assets/icons/Windows XP Icons/Internet Explorer 6.png" alt="">
@@ -1202,13 +1188,17 @@
 
           <div class="xp-programs-divider"></div>
 
-          <div class="xp-programs-item" onclick="window.open('https://github.com/JoseSoares01', '_blank')">
+          <div class="xp-programs-item" data-social="github">
             <img class="xp-programs-icon" src="assets/icons/Windows XP Icons/Github.png" alt="">
             Github
           </div>
-          <div class="xp-programs-item" onclick="window.open('https://www.linkedin.com/in/janyel-rodrigues-1b998a190/', '_blank')">
+          <div class="xp-programs-item" data-social="linkedin">
             <img class="xp-programs-icon" src="assets/icons/Windows XP Icons/LinkedIn.png" alt="">
             LinkedIn
+          </div>
+          <div class="xp-programs-item" data-social="instagram">
+            <img class="xp-programs-icon" src="assets/icons/Windows XP Icons/Instagram.png" alt="">
+            Instagram
           </div>
           <div class="xp-programs-item" onclick="window.open('https://site-portifolio-eoh.pages.dev/', '_blank')">
             <img class="xp-programs-icon" src="assets/icons/Windows XP Icons/Internet Explorer 6.png" alt="">
@@ -1309,9 +1299,11 @@
 
   </div>
 
+  <script src="assets/js/social-links.js"></script>
   <script src="assets/js/recent-apps.js"></script>
   <script src="assets/js/projects.js"></script>
   <script src="assets/js/paint-ui.js"></script>
+  <script src="assets/js/cmd-terminal.js"></script>
   <script src="assets/js/app.js"></script>
 </body>
 

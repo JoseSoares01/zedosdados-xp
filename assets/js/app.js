@@ -23,6 +23,9 @@ window.addEventListener('DOMContentLoaded', () => {
   // Login mobile + bloqueio de acesso
   initMobileLogin();
 
+  updateMobileMode();
+  window.addEventListener('resize', updateMobileMode);
+
   // Garante animação do GIF no login ao carregar
   requestAnimationFrame(() => {
     if (!document.body.classList.contains('xp-logged-in')) {
@@ -40,6 +43,8 @@ window.addEventListener('DOMContentLoaded', () => {
   // Inicializa o aplicativo Paint no Canvas
   initPaint();
 
+  initSocialLinkDialogs();
+
   // Inicializa os comportamentos de passar o mouse/clicar no Menu Iniciar
   initStartMenuInteraction();
 
@@ -54,6 +59,8 @@ window.addEventListener('DOMContentLoaded', () => {
 
   // Windows Media Player
   initWmp();
+
+  initCmdTerminal();
 
   // Adiciona um listener de clique no desktop para limpar seleções/menus
   document.getElementById('desktop').addEventListener('click', (e) => {
@@ -107,10 +114,12 @@ function openWindow(id) {
   if (!win) return;
 
   win.style.display = 'flex';
+  if (isMobile()) applyMobileFullscreen(win);
   focusWindow(id);
   updateTaskbarHandles();
 
   if (id === 'window-wmp') wmpOpenDefault();
+  if (id === 'window-layout' && typeof startCmdTerminal === 'function') startCmdTerminal();
 }
 
 // Gerenciamento de janelas: Foco (trazer para a frente)
@@ -152,20 +161,24 @@ function closeWindow(id) {
 
   win.style.display = 'none';
   if (id === 'window-wmp') document.getElementById('wmp-media')?.pause();
+  if (id === 'window-layout' && typeof stopCmdTerminal === 'function') stopCmdTerminal();
   updateTaskbarHandles();
 }
 
 // Gerenciamento de janelas: Minimizar (alternar exibição)
 function minimizeWindow(id) {
+  if (isMobile()) return;
   const win = document.getElementById(id);
   if (!win) return;
   win.style.display = 'none';
   if (id === 'window-wmp') document.getElementById('wmp-media')?.pause();
+  if (id === 'window-layout' && typeof stopCmdTerminal === 'function') stopCmdTerminal();
   updateTaskbarHandles();
 }
 
 // Gerenciamento de janelas: Alternar maximização
 function maximizeWindow(id) {
+  if (isMobile()) return;
   const win = document.getElementById(id);
   if (!win) return;
 
@@ -198,6 +211,7 @@ function maximizeWindow(id) {
 
 // Manipuladores para arrastar janelas
 function dragStart(e, id) {
+  if (isMobile()) return;
   // Traz a janela para a frente
   focusWindow(id);
   
@@ -421,7 +435,7 @@ function updateTaskbarHandles() {
     'window-typography': 'Tipografia',
     'window-paint': 'Paint',
     'window-components': 'Componentes',
-    'window-layout': 'Grade de Layout',
+    'window-layout': 'Prompt de Comando',
     'window-depth': 'Meu Currículo',
     'window-wmp': 'Media Player',
     'window-dos': 'Lixeira',
@@ -437,7 +451,7 @@ function updateTaskbarHandles() {
     'window-typography': 'assets/icons/Windows XP Icons/Fonts.png',
     'window-paint': 'assets/icons/Windows XP Icons/Paint.png',
     'window-components': 'assets/icons/Windows XP Icons/Control Panel.png',
-    'window-layout': 'assets/icons/Windows XP Icons/Tweak UI.png',
+    'window-layout': 'assets/icons/Windows XP Icons/Command Prompt.png',
     'window-depth': 'assets/images/janyel/curriculo-pdf.png',
     'window-wmp': 'assets/icons/Windows XP Icons/Windows Media Player 10.png',
     'window-dos': 'assets/icons/Windows XP Icons/Recycle Bin (empty).png',
@@ -460,6 +474,10 @@ function updateTaskbarHandles() {
       `;
       
       handle.onclick = () => {
+        if (isMobile()) {
+          openWindow(id);
+          return;
+        }
         if (isActive) {
           minimizeWindow(id);
         } else {
@@ -1132,6 +1150,23 @@ const MOBILE_BREAKPOINT = 639;
 
 function isMobile() {
   return window.innerWidth <= MOBILE_BREAKPOINT;
+}
+
+function applyMobileFullscreen(win) {
+  if (!win || !isMobile()) return;
+  win.classList.remove('maximized');
+  win.style.left = '0';
+  win.style.top = '0';
+  win.style.width = '100%';
+  win.style.height = 'calc(100dvh - 40px)';
+}
+
+function updateMobileMode() {
+  document.body.classList.toggle('xp-mobile', isMobile());
+  if (!isMobile()) return;
+  document.querySelectorAll('.xp-window').forEach(win => {
+    if (win.style.display !== 'none') applyMobileFullscreen(win);
+  });
 }
 
 function initMobileLogin() {
