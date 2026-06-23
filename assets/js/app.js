@@ -1188,11 +1188,51 @@ const XP_SOUNDS = {
   shutdown: 'assets/songs/shutdown.wav'
 };
 
-function playXpSound(name) {
+const xpAudioCache = {};
+let xpAudioUnlocked = false;
+
+function getXpAudio(name) {
   const src = XP_SOUNDS[name];
   if (!src) return null;
 
-  const audio = new Audio(src);
+  if (!xpAudioCache[name]) {
+    const audio = new Audio(src);
+    audio.preload = 'auto';
+    xpAudioCache[name] = audio;
+  }
+
+  return xpAudioCache[name];
+}
+
+function unlockXpAudio() {
+  if (xpAudioUnlocked) return;
+
+  const audio = getXpAudio('startup');
+  if (!audio) return;
+
+  audio.volume = 0.001;
+  const playAttempt = audio.play();
+  if (!playAttempt) return;
+
+  playAttempt
+    .then(() => {
+      audio.pause();
+      audio.currentTime = 0;
+      audio.volume = 1;
+      xpAudioUnlocked = true;
+    })
+    .catch(() => {
+      audio.volume = 1;
+    });
+}
+
+function playXpSound(name) {
+  const audio = getXpAudio(name);
+  if (!audio) return null;
+
+  audio.pause();
+  audio.currentTime = 0;
+  audio.volume = 1;
   audio.play().catch(() => {});
   return audio;
 }
@@ -1260,6 +1300,10 @@ function initMobileLogin() {
 }
 
 function startLogin() {
+  // Desbloqueia áudio no gesto do utilizador (obrigatório em mobile)
+  unlockXpAudio();
+  playXpSound('startup');
+
   const login = document.getElementById('xp-login-screen');
   const welcome = document.getElementById('xp-welcome-screen');
 
@@ -1286,9 +1330,15 @@ function startLogin() {
 function completeLogin() {
   document.body.classList.add('xp-logged-in');
 
-  playXpSoundAsync('startup').then(() => {
-    showWelcomeBalloon({ playNotify: true });
-  });
+  const startupAudio = getXpAudio('startup');
+  const showBalloonWithNotify = () => showWelcomeBalloon({ playNotify: true });
+
+  if (!startupAudio || startupAudio.ended || startupAudio.paused) {
+    showBalloonWithNotify();
+    return;
+  }
+
+  startupAudio.addEventListener('ended', showBalloonWithNotify, { once: true });
 }
 
 function closeStartMenu() {
@@ -1332,6 +1382,7 @@ function closePowerDialog(immediate = false) {
 }
 
 function performLogoff() {
+  unlockXpAudio();
   playXpSound('shutdown');
   closePowerDialog(true);
   closeWelcomeBalloon(false);

@@ -1300,7 +1300,27 @@
     </div>
 
   </div>
+  <script>
+    // Bloquear clique direito (exceto em campos de texto para colar)
+    document.addEventListener('contextmenu', (e) => {
+      if (e.target.closest('input, textarea, [contenteditable="true"]')) return;
+      e.preventDefault();
+    });
 
+    // Bloquear atalhos de DevTools e ver código-fonte
+    document.addEventListener('keydown', (e) => {
+      const key = e.key.toLowerCase();
+      const devToolsKeys = ['i', 'j', 'c', 'k'];
+      const blocked =
+        key === 'f12' ||
+        (e.ctrlKey && e.shiftKey && devToolsKeys.includes(key)) ||
+        (e.metaKey && e.altKey && devToolsKeys.includes(key)) ||
+        (e.ctrlKey && key === 'u') ||
+        (e.metaKey && e.altKey && key === 'u');
+
+      if (blocked) e.preventDefault();
+    });
+  </script>
   <script src="assets/js/social-links.js"></script>
   <script src="assets/js/recent-apps.js"></script>
   <script src="assets/js/projects.js"></script>
