@@ -13,6 +13,7 @@
   <link rel="stylesheet" href="assets/css/warcraft.css">
   <link rel="stylesheet" href="assets/css/ragnarok.css">
   <link rel="stylesheet" href="assets/css/paint-embed.css">
+  <link rel="stylesheet" href="assets/css/wmp-skin.css">
 </head>
 
 <body>
@@ -1052,50 +1053,34 @@
     </div>
 
 
-    <!-- ==================== WINDOW: WINDOWS MEDIA PLAYER ==================== -->
-    <div class="xp-window xp-wmp-window" id="window-wmp" style="left: 120px; top: 80px; width: 420px; display: none;">
-      <div class="xp-window-titlebar" onmousedown="dragStart(event, 'window-wmp')">
-        <div class="xp-window-title">
-          <img class="xp-window-title-icon" src="assets/icons/Windows XP Icons/Windows Media Player 10.png" alt="">
-          Media Player
-        </div>
-        <div class="xp-window-controls">
-          <button class="xp-window-control-btn" onclick="minimizeWindow('window-wmp')"><img src="assets/icons/Windows XP Icons/Minimize.png" alt="" class="xp-window-control-icon"></button>
-          <button class="xp-window-control-btn maximize-btn" onclick="maximizeWindow('window-wmp')"><img src="assets/icons/Windows XP Icons/Maximize.png" alt="" class="xp-window-control-icon"></button>
-          <button class="xp-window-control-btn close" onclick="closeWindow('window-wmp')"><img src="assets/icons/Windows XP Icons/Exit.png" alt="" class="xp-window-control-icon"></button>
-        </div>
-      </div>
+    <!-- ==================== WINDOW: WINDOWS MEDIA PLAYER 9 ==================== -->
+    <div class="xp-window xp-wmp-window" id="window-wmp" style="left: 120px; top: 60px; width: 380px; display: none;">
       <div class="xp-window-content xp-wmp-content">
-        <div class="xp-wmp-body">
-          <div class="xp-wmp-stage" id="wmp-display">
-            <video id="wmp-media" class="xp-wmp-video" preload="metadata" playsinline></video>
-          </div>
-          <div class="xp-wmp-deck">
-            <div class="xp-wmp-progress-wrap">
-              <input type="range" class="xp-wmp-progress" id="wmp-seek" min="0" max="100" value="0" oninput="wmpSeek(this.value)" aria-label="Posição">
-            </div>
-            <div class="xp-wmp-toolbar">
-              <div class="xp-wmp-time-pill" id="wmp-time-display">0:00 / 0:00</div>
-              <div class="xp-wmp-transport">
-                <button class="xp-wmp-btn xp-wmp-btn--small" type="button" onclick="wmpPrev()" title="Anterior" aria-label="Anterior">
-                  <span class="xp-wmp-icon xp-wmp-icon--prev"></span>
-                </button>
-                <button class="xp-wmp-btn xp-wmp-btn--play" type="button" onclick="wmpTogglePlay()" title="Reproduzir / Pausar" id="wmp-play-btn" aria-label="Reproduzir">
-                  <span class="xp-wmp-icon xp-wmp-icon--play"></span>
-                </button>
-                <button class="xp-wmp-btn xp-wmp-btn--small" type="button" onclick="wmpNext()" title="Seguinte" aria-label="Seguinte">
-                  <span class="xp-wmp-icon xp-wmp-icon--next"></span>
-                </button>
-              </div>
-              <div class="xp-wmp-volume-wrap">
-                <span class="xp-wmp-vol-icon" aria-hidden="true"></span>
-                <input type="range" class="xp-wmp-vol" id="wmp-volume" min="0" max="100" value="80" oninput="wmpSetVolume(this.value)" aria-label="Volume">
-                <button class="xp-wmp-btn xp-wmp-btn--small xp-wmp-btn--repeat" type="button" onclick="wmpToggleRepeat()" title="Repetir" id="wmp-repeat-btn" aria-label="Repetir">
-                  <span class="xp-wmp-icon xp-wmp-icon--repeat"></span>
-                </button>
-              </div>
-            </div>
-          </div>
+        <div class="wmp-skin" id="wmp-skin">
+          <div class="wmp-skin__drag" onmousedown="dragStart(event, 'window-wmp')" title="Drag"></div>
+
+          <video id="wmp-media" class="wmp-skin__video" preload="metadata" playsinline></video>
+
+          <span class="wmp-skin__status" id="wmp-status">Ready</span>
+          <span class="wmp-skin__time" id="wmp-time-display">0:00</span>
+
+          <button type="button" class="wmp-skin__hit wmp-skin__hit--open" onclick="wmpOpenFile()" title="Open File" aria-label="Open File"></button>
+          <button type="button" class="wmp-skin__hit wmp-skin__hit--pl" title="Playlist" aria-label="Playlist" disabled></button>
+          <button type="button" class="wmp-skin__hit wmp-skin__hit--vis" title="Visualization" aria-label="Visualization" disabled></button>
+          <button type="button" class="wmp-skin__hit wmp-skin__hit--eq" title="Equalizer" aria-label="Equalizer" disabled></button>
+          <button type="button" class="wmp-skin__hit wmp-skin__hit--min" onclick="minimizeWindow('window-wmp')" title="Minimize" aria-label="Minimize"></button>
+          <button type="button" class="wmp-skin__hit wmp-skin__hit--close" onclick="closeWindow('window-wmp')" title="Close" aria-label="Close"></button>
+
+          <button type="button" class="wmp-skin__hit wmp-skin__hit--rew" onclick="wmpPrev()" title="Rewind" aria-label="Rewind"></button>
+          <input type="range" class="wmp-skin__seek" id="wmp-seek" min="0" max="100" value="0" oninput="wmpSeek(this.value)" aria-label="Seek">
+          <button type="button" class="wmp-skin__hit wmp-skin__hit--ffwd" onclick="wmpNext()" title="Fast Forward" aria-label="Fast Forward"></button>
+
+          <button type="button" class="wmp-skin__hit wmp-skin__hit--play" id="wmp-play-btn" onclick="wmpTogglePlay()" title="Play" aria-label="Play"></button>
+          <button type="button" class="wmp-skin__hit wmp-skin__hit--stop" onclick="wmpStop()" title="Stop" aria-label="Stop"></button>
+          <button type="button" class="wmp-skin__hit wmp-skin__hit--prev" onclick="wmpPlaylistPrev()" title="Previous" aria-label="Previous"></button>
+          <button type="button" class="wmp-skin__hit wmp-skin__hit--next" onclick="wmpPlaylistNext()" title="Next" aria-label="Next"></button>
+          <button type="button" class="wmp-skin__hit wmp-skin__hit--mute" id="wmp-mute-btn" onclick="wmpToggleMute()" title="Mute" aria-label="Mute"></button>
+          <input type="range" class="wmp-skin__volume" id="wmp-volume" min="0" max="100" value="80" oninput="wmpSetVolume(this.value)" aria-label="Volume">
         </div>
         <input type="file" id="wmp-file-input" accept="audio/*,video/*" hidden onchange="wmpLoadFile(this)">
       </div>
