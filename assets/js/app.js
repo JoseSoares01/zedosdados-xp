@@ -1154,7 +1154,7 @@ function resetContactForm() {
   if (from) from.value = '';
   if (subject) subject.value = '';
   if (message) message.value = '';
-  setContactStatus('Compose a message to Janyel');
+  setContactStatus('Compose a message to José Soares');
   from?.focus();
 }
 

@@ -1,5 +1,5 @@
 const CV_PDF_PATH = 'assets/images/janyel/White Black Elegant Modern Corporate CV Resume.pdf';
-const CV_PDF_DOWNLOAD_NAME = 'Anyel-Rodrigues-CV.pdf';
+const CV_PDF_DOWNLOAD_NAME = 'Jose-Soares-CV.pdf';
 
 function getCvPdfUrl() {
   return encodeURI(CV_PDF_PATH);
