@@ -56,9 +56,6 @@ window.addEventListener('DOMContentLoaded', () => {
   // Toolbar de edição do formulário de contato
   initContactMailToolbar();
 
-  // Windows Media Player
-  initWmp();
-
   initCmdTerminal();
 
   // Adiciona um listener de clique no desktop para limpar seleções/menus
@@ -162,7 +159,7 @@ function closeWindow(id) {
   }
 
   win.style.display = 'none';
-  if (id === 'window-wmp') document.getElementById('wmp-media')?.pause();
+  if (id === 'window-wmp') wmpPause();
   if (id === 'window-warcraft' && typeof pauseWarcraftVideo === 'function') pauseWarcraftVideo();
   if (id === 'window-ragnarok' && typeof stopRagnarokGame === 'function') stopRagnarokGame();
   if (id === 'window-paint' && typeof stopXpPaint === 'function') stopXpPaint();
@@ -175,7 +172,7 @@ function minimizeWindow(id) {
   const win = document.getElementById(id);
   if (!win) return;
   win.style.display = 'none';
-  if (id === 'window-wmp') document.getElementById('wmp-media')?.pause();
+  if (id === 'window-wmp') wmpPause();
   if (id === 'window-warcraft' && typeof pauseWarcraftVideo === 'function') pauseWarcraftVideo();
   if (id === 'window-layout' && typeof stopCmdTerminal === 'function') stopCmdTerminal();
   updateTaskbarHandles();
@@ -274,7 +271,7 @@ function resetWindowPositions() {
     { id: 'window-components', left: '180px', top: '160px', width: '700px' },
     { id: 'window-layout', left: '220px', top: '200px', width: '640px' },
     { id: 'window-depth', left: '260px', top: '240px', width: '780px' },
-    { id: 'window-wmp', left: '120px', top: '80px', width: '420px' },
+    { id: 'window-wmp', left: '120px', top: '80px', width: '520px' },
     { id: 'window-warcraft', left: '60px', top: '30px', width: '920px' },
     { id: 'window-ragnarok', left: '40px', top: '24px', width: '960px' },
     { id: 'window-dos', left: '300px', top: '280px', width: '680px' },
@@ -967,162 +964,6 @@ function openPortfolioRepo(card) {
 
 function showMacMoreInfo() {
   showNotification('Mac mini (2023) · Apple M2 · 8 GB · macOS Tahoe 26.6');
-}
-
-// Windows Media Player
-const WMP_DEFAULT_MEDIA = 'assets/media/videos/The Pursuit Of Vikings (Amon Amarth).mp4';
-let wmpObjectUrl = null;
-
-function wmpSetPlayState(playing) {
-  document.getElementById('wmp-play-btn')?.classList.toggle('is-playing', playing);
-}
-
-function wmpUpdateTimeDisplay() {
-  const media = document.getElementById('wmp-media');
-  const el = document.getElementById('wmp-time-display');
-  if (!media || !el) return;
-  const cur = wmpFormatTime(media.currentTime);
-  const tot = wmpFormatTime(media.duration || 0);
-  el.textContent = `${cur} / ${tot}`;
-}
-
-function wmpUpdateProgressBar() {
-  const media = document.getElementById('wmp-media');
-  const seek = document.getElementById('wmp-seek');
-  if (!media || !seek) return;
-  const pct = media.duration ? (media.currentTime / media.duration) * 100 : 0;
-  seek.value = pct;
-  seek.style.setProperty('--val', `${pct}%`);
-}
-
-function initWmp() {
-  const media = document.getElementById('wmp-media');
-  const volume = document.getElementById('wmp-volume');
-  if (!media) return;
-
-  media.volume = 0.8;
-  if (volume) volume.style.setProperty('--vol', `${volume.value}%`);
-
-  media.addEventListener('timeupdate', () => {
-    wmpUpdateProgressBar();
-    wmpUpdateTimeDisplay();
-  });
-
-  media.addEventListener('loadedmetadata', () => {
-    wmpUpdateTimeDisplay();
-    wmpUpdateProgressBar();
-  });
-
-  media.addEventListener('play', () => wmpSetPlayState(true));
-
-  media.addEventListener('pause', () => wmpSetPlayState(false));
-
-  media.addEventListener('ended', () => {
-    if (media.loop) {
-      media.currentTime = 0;
-      media.play();
-      return;
-    }
-    wmpStop();
-  });
-}
-
-function wmpOpenDefault() {
-  wmpLoadFromUrl(WMP_DEFAULT_MEDIA);
-}
-
-function wmpLoadFromUrl(src) {
-  const media = document.getElementById('wmp-media');
-  if (!media) return;
-
-  if (wmpObjectUrl) {
-    URL.revokeObjectURL(wmpObjectUrl);
-    wmpObjectUrl = null;
-  }
-
-  media.src = src;
-  media.load();
-  media.play().catch(() => wmpSetPlayState(false));
-}
-
-function wmpFormatTime(seconds) {
-  if (!Number.isFinite(seconds)) return '0:00';
-  const m = Math.floor(seconds / 60);
-  const s = Math.floor(seconds % 60);
-  return `${m}:${String(s).padStart(2, '0')}`;
-}
-
-function wmpOpenFile() {
-  document.getElementById('wmp-file-input')?.click();
-}
-
-function wmpLoadFile(input) {
-  const file = input.files?.[0];
-  const media = document.getElementById('wmp-media');
-  if (!file || !media) return;
-
-  if (wmpObjectUrl) URL.revokeObjectURL(wmpObjectUrl);
-  wmpObjectUrl = URL.createObjectURL(file);
-  media.src = wmpObjectUrl;
-  media.load();
-  media.play().catch(() => wmpSetPlayState(false));
-}
-
-function wmpTogglePlay() {
-  const media = document.getElementById('wmp-media');
-  if (!media) return;
-  if (!media.src) {
-    wmpOpenDefault();
-    return;
-  }
-  if (media.paused) media.play();
-  else media.pause();
-}
-
-function wmpStop() {
-  const media = document.getElementById('wmp-media');
-  if (!media) return;
-  media.pause();
-  media.currentTime = 0;
-  wmpUpdateProgressBar();
-  wmpUpdateTimeDisplay();
-  wmpSetPlayState(false);
-}
-
-function wmpPrev() {
-  const media = document.getElementById('wmp-media');
-  if (!media || !media.src) return;
-  media.currentTime = Math.max(0, media.currentTime - 10);
-}
-
-function wmpNext() {
-  const media = document.getElementById('wmp-media');
-  if (!media || !media.src || !media.duration) return;
-  media.currentTime = Math.min(media.duration, media.currentTime + 10);
-}
-
-function wmpToggleRepeat() {
-  const media = document.getElementById('wmp-media');
-  const btn = document.getElementById('wmp-repeat-btn');
-  if (!media) return;
-  media.loop = !media.loop;
-  btn?.classList.toggle('is-active', media.loop);
-}
-
-function wmpSeek(value) {
-  const media = document.getElementById('wmp-media');
-  const seek = document.getElementById('wmp-seek');
-  if (!media || !media.duration) return;
-  media.currentTime = (value / 100) * media.duration;
-  if (seek) seek.style.setProperty('--val', `${value}%`);
-  wmpUpdateTimeDisplay();
-}
-
-function wmpSetVolume(value) {
-  const media = document.getElementById('wmp-media');
-  const volume = document.getElementById('wmp-volume');
-  if (media) media.volume = value / 100;
-  if (volume) volume.style.setProperty('--vol', `${value}%`);
 }
 
 function sendContactMessage() {
