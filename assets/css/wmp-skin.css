@@ -1,6 +1,6 @@
 /* Windows Media Player — overlay skin architecture
- * Medidas exatas para box-skin.png (1254×1254 px).
- * Cada controlo circular usa centro + diâmetro (placeholder).
+ * Medidas calibradas para box-skin.png (1254×1254 px).
+ * Cada controlo usa centro + diâmetro (% da largura do skin).
  */
 
 .xp-wmp-window .xp-window-content {
@@ -19,57 +19,60 @@
   container-type: inline-size;
   user-select: none;
 
-  /* Área de vídeo (57,78)→(985,772) em 1024, × 1254/1024 */
+  /* Área de vídeo — recorte interno do ecrã (57,78)→(985,772) em 1024 */
   --wmp-video-left: 5.566406%;
   --wmp-video-top: 7.617188%;
   --wmp-video-width: 90.625%;
   --wmp-video-height: 67.773438%;
 
-  /* Barra de seek (155,835)→(880,855) em 1024 */
-  --wmp-seek-left: 15.136719%;
-  --wmp-seek-top: 81.542969%;
-  --wmp-seek-width: 70.800781%;
-  --wmp-seek-height: 1.953125%;
-  --wmp-seek-thumb-width: 3.827751%;
-  --wmp-seek-thumb-height: 1.754386%;
+  /* Barra de seek — faixa verde (190,1047)→(1108,1054) em 1254 */
+  --wmp-seek-left: 14.673047%;
+  --wmp-seek-top: 83.492822%;
+  --wmp-seek-width: 73.205741%;
+  --wmp-seek-height: 1.355662%;
+  --wmp-seek-thumb-width: 7.814992%;
+  --wmp-seek-thumb-height: 3.748007%;
 
-  /* Play — centro (103,922), Ø110 em 1024 */
-  --wmp-play-cx: 10.058594%;
-  --wmp-play-cy: 90.039062%;
-  --wmp-play-size: 10.742188%;
+  /* Linha de alinhamento — cápsulas, stop, volume (y=1125 em 1254) */
+  --wmp-controls-cy: 89.713716%;
 
-  /* Stop — centro (195,922), Ø80 */
-  --wmp-stop-cx: 19.042969%;
-  --wmp-stop-cy: 90.039062%;
-  --wmp-stop-size: 7.8125%;
+  /* Play — círculo grande, fila superior (y=1081 em 1254) */
+  --wmp-play-cx: 11.164274%;
+  --wmp-play-cy: 86.204944%;
+  --wmp-play-size: 8.612440%;
 
-  /* Previous — centro (275,922), Ø80 */
-  --wmp-previous-cx: 26.855469%;
-  --wmp-previous-cy: 90.039062%;
-  --wmp-previous-size: 7.8125%;
+  /* Stop — círculo pequeno (cx=235, Ø48) em 1254 */
+  --wmp-stop-cx: 18.739872%;
+  --wmp-stop-cy: var(--wmp-controls-cy);
+  --wmp-stop-size: 3.828549%;
 
-  /* Next — centro (355,922), Ø80 */
-  --wmp-next-cx: 34.667969%;
-  --wmp-next-cy: 90.039062%;
-  --wmp-next-size: 7.8125%;
+  /* Previous — cápsula esquerda (cx=324, Ø40) em 1254 */
+  --wmp-previous-cx: 25.837322%;
+  --wmp-previous-cy: var(--wmp-controls-cy);
+  --wmp-previous-size: 3.189792%;
 
-  /* Mute — centro (435,922), Ø80 */
-  --wmp-mute-cx: 42.480469%;
-  --wmp-mute-cy: 90.039062%;
-  --wmp-mute-size: 7.8125%;
+  /* Next — cápsula direita (cx=416, Ø40) em 1254 */
+  --wmp-next-cx: 33.173843%;
+  --wmp-next-cy: var(--wmp-controls-cy);
+  --wmp-next-size: 3.189792%;
 
-  /* Fullscreen — centro (513,922), Ø80 */
-  --wmp-fullscreen-cx: 50.097656%;
-  --wmp-fullscreen-cy: 90.039062%;
-  --wmp-fullscreen-size: 7.8125%;
+  /* Mute (cx=510, Ø44) em 1254 */
+  --wmp-mute-cx: 40.669856%;
+  --wmp-mute-cy: var(--wmp-controls-cy);
+  --wmp-mute-size: 3.508772%;
 
-  /* Volume — faixa (575,914)→(675,930) em 1024 */
-  --wmp-volume-left: 56.152344%;
-  --wmp-volume-top: 89.257812%;
-  --wmp-volume-width: 9.765625%;
-  --wmp-volume-height: 1.5625%;
-  --wmp-volume-thumb-width: 2.232855%;
-  --wmp-volume-thumb-height: 3.827751%;
+  /* Fullscreen (cx=610, Ø44) em 1254 */
+  --wmp-fullscreen-cx: 48.643382%;
+  --wmp-fullscreen-cy: var(--wmp-controls-cy);
+  --wmp-fullscreen-size: 3.508772%;
+
+  /* Volume — faixa (590,1125)→(749,1132) em 1254 */
+  --wmp-volume-left: 47.049441%;
+  --wmp-volume-cy: var(--wmp-controls-cy);
+  --wmp-volume-width: 12.678788%;
+  --wmp-volume-height: 1.355662%;
+  --wmp-volume-thumb-width: 3.748007%;
+  --wmp-volume-thumb-height: 7.575757%;
 }
 
 .wmp .skin {
@@ -106,7 +109,7 @@
   background-color: transparent;
   background-repeat: no-repeat;
   background-position: center;
-  background-size: 100% 100%;
+  background-size: contain;
   cursor: pointer;
   z-index: 3;
   transition: filter 0.12s ease;
@@ -275,7 +278,7 @@
   height: var(--wmp-seek-thumb-height);
   background: url('../media/buttons/seek-thumb.png') center / contain no-repeat;
   border: 0;
-  margin-top: calc(var(--wmp-seek-thumb-height) / -2 + 50%);
+  margin-top: calc(50% - var(--wmp-seek-thumb-height) / 2);
 }
 
 .wmp .seek::-moz-range-track {
@@ -294,7 +297,7 @@
 .wmp .volume {
   position: absolute;
   left: var(--wmp-volume-left);
-  top: var(--wmp-volume-top);
+  top: calc(var(--wmp-volume-cy) - var(--wmp-volume-thumb-height) / 2);
   width: var(--wmp-volume-width);
   height: var(--wmp-volume-height);
   margin: 0;
@@ -318,7 +321,7 @@
   height: var(--wmp-volume-thumb-height);
   background: url('../media/buttons/volume-thumb.png') center / contain no-repeat;
   border: 0;
-  margin-top: calc(var(--wmp-volume-thumb-height) / -2 + 50%);
+  margin-top: calc(50% - var(--wmp-volume-thumb-height) / 2);
 }
 
 .wmp .volume::-moz-range-track {
